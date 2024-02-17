@@ -37,9 +37,9 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///finance.db")
 
-# Make sure API key is set
-if not os.environ.get("API_KEY"):
-    raise RuntimeError("API_KEY not set")
+# # Make sure API key is set
+# if not os.environ.get("API_KEY"):
+#     raise RuntimeError("API_KEY not set")
 
 
 @app.route("/")
@@ -191,9 +191,9 @@ def quote():
 
         #if valid output is recieved, turn the price into cost. otherwise pass it without altering
         try:
-            return render_template("quoted.html",symbol=stocks["symbol"], name=stocks["name"], price=usd(stocks["price"]))
+            return render_template("quoted.html",stocks=stocks)
         except:
-            return render_template("quoted.html",symbol=stocks["symbol"], name=stocks["name"], price=stocks["price"])
+            return render_template("quoted.html",stocks=stocks)
  
     else:
         return render_template("quote.html")

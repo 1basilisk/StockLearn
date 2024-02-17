@@ -3,7 +3,7 @@ import requests
 import urllib.parse
 import csv
 import datetime
-import pytz
+
 import uuid
 
 from flask import redirect, render_template, request, session
@@ -38,9 +38,33 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def lookup(query):
 
+    url = "https://ms-finance.p.rapidapi.com/market/v2/auto-complete"
+
+    querystring = {"q":query}
+
+    headers = {
+        "X-RapidAPI-Key": "f9eb8cf462mshda5338b49a7e35dp1cdfa9jsn7bca178e06c6",
+        "X-RapidAPI-Host": "ms-finance.p.rapidapi.com"
+    }
+
+    response = requests.get(url, headers=headers, params=querystring)
+
+    data = response.json()
+    print(data)
+    stocks = [{"name": item['name'], "ticker": item['ticker'], "id": item['performanceId']} for item in data['results'] if item['securityType'] == 'ST']
+    with open("response.json", "+a") as f:
+        f.write(response.text)
+
+    
+    return stocks
+    
+
+"""
+YAHOO finance
 def lookup(symbol):
-    """Look up quote for symbol."""
+    
 
     # Prepare API request
     symbol = symbol.upper()
@@ -74,8 +98,12 @@ def lookup(symbol):
     except (KeyError, IndexError, requests.RequestException, ValueError):
         return None
 
+"""
 
 """
+
+iex cloud
+
 def lookup(symbol):
 
     # Contact API
